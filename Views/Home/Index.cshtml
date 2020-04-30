@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Squares Games";
+    Layout = "_IndexLayout";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Squares Games</h1>
+        <form asp-action="Login">
+            <p>Username: <input type="text" name="username"></p>
+            <p>Password: <input type="password" name="password"></p>
+            <p><input type="submit" title="Login"></p>
+            <p><a class="nav-link text-dark" asp-controller="SquareUser" asp-action="Create">Sign Up</a></p>
+        </form>                
+</div>

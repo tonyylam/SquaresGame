@@ -1,0 +1,85 @@
+@model IEnumerable<SquaresGame.Models.Square>
+
+@{
+    ViewData["Title"] = "Square Boards";
+}
+
+<h1>@ViewData["Year"] - @ViewData["Game"] - @ViewData["Round"]</h1>
+
+<div>
+    @{
+        int assign = (int)ViewData["Assign"];
+        if (assign != 0)
+        {
+            <form action="/Square/Assign" method="post">
+                <input type="hidden" value="@Model.FirstOrDefault().GameId" id="gameId" name="gameId" />
+                <input type="Submit" value="Assign Scores to Board" />
+            </form>
+        }
+    }
+</div>
+<div>
+    <table class="table" width=100%>
+        <tbody>            
+            @{
+                int minSquare = 1;
+                int maxSquare = 10;
+                IList<SquareCard> squareCards = ViewData["SquareCards"] as IList<SquareCard>;
+                
+                @if (squareCards != null)
+                {                    
+                    <tr>
+                        <td></td>
+                            @foreach(var xCard in squareCards)
+                            {
+                                <th>@xCard.xVall</th>
+                            }                        
+                    </tr>
+                }
+
+                @for(int y = 1; y <= 10; y++)
+                {            
+                    if (y > 1)
+                    {
+                        minSquare = (y - 1) * 10 + 1;
+                        maxSquare = minSquare + 9;
+                    }
+
+                    <tr>
+                        @if (squareCards != null)
+                        {
+                            if(squareCards[y-1] != null)
+                            {
+                                <th>@squareCards[y-1].yVal</th>
+                            }
+                        }
+
+                        @foreach (var square in Model)
+                        {
+                            if (square.SquareId >= minSquare && square.SquareId <= maxSquare)
+                            {
+                                <td>
+                                    @{
+                                        if (String.IsNullOrEmpty(square.PlayerName))
+                                        {
+                                            @using (Html.BeginForm("Update", "Square", FormMethod.Post))
+                                            {
+                                                @Html.HiddenFor(modelItem => square.Id)
+                                                <input type="submit" value="Pick this One" />                                    
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem => square.PlayerName)
+                                        }
+                                    }
+                                </td>
+                            }                                        
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
